@@ -17,7 +17,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         const baseStyles = "font-bold uppercase tracking-wide transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center";
 
         const variants = {
-            primary: "bg-primary text-canvas hover:shadow-sentinel-glow border border-transparent clip-corners",
+            primary: "bg-primary text-ink-primary hover:shadow-sentinel-glow border border-transparent clip-corners",
             secondary: "bg-transparent text-primary border border-primary hover:bg-primary-dim",
             hazard: "bg-hazard text-white hover:shadow-hazard-glow border border-transparent",
             ghost: "bg-transparent text-ink-secondary hover:text-primary hover:bg-ink-primary/5",
