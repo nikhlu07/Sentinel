@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel | Autonomous Economy Watchtower</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml">
+
+    <!-- Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Icons: Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind CSS with Custom Sentinel Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        canvas: '#0A0A0A',       // Deep Carbon
+                        surface: '#18181B',      // Gunmetal
+                        primary: '#00E676',      // Radar Green
+                        'primary-dim': 'rgba(0, 230, 118, 0.1)',
+                        hazard: '#FF5722',       // Sentinel Orange
+                        'ink-primary': '#F4F4F5',  // Phosphor White
+                        'ink-secondary': '#A1A1AA',// Camouflage
+                        'border-faint': '#27272A', // Stealth Grey
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'sentinel-glow': '0 0 20px rgba(0, 230, 118, 0.15)',
+                        'hazard-glow': '0 0 20px rgba(255, 87, 34, 0.15)',
+                        'monitor': '0 0 15px rgba(0, 230, 118, 0.05)',
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scan': 'scan 4s linear infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { backgroundPosition: '0% 0%' },
+                            '100%': { backgroundPosition: '0% 100%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Overrides */
+        body {
+            background-color: #0A0A0A;
+            color: #F4F4F5;
+            overflow-x: hidden;
+        }
+
+        /* Scanline Overlay Effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.3;
+        }
+
+        /* Scrollbar styling for the log */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #18181B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272A;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00E676;
+        }
+
+        /* Utility for blinking cursor */
+        .blink-cursor::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-primary selection:text-canvas">
+
+    <!-- Scanline Overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-40 border-b border-border-faint bg-canvas/90 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo: The Guardian Mask -->
+                <div class="flex items-center gap-3 group cursor-pointer" id="system-status-toggle">
+                    <img src="logo.svg" alt="Sentinel Logo" class="w-8 h-8">
+                    <div class="flex flex-col">
+                        <span class="font-bold tracking-wider text-lg leading-none">SENTINEL</span>
+                        <span class="font-mono text-[10px] text-primary tracking-[0.2em] leading-none mt-1">SYS.V1.0</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#monitor" class="text-sm font-mono text-ink-secondary hover:text-primary transition-colors uppercase tracking-wide">[ MONITOR ]</a>
+                    <a href="#agents" class="text-sm font-mono text-ink-secondary hover:text-primary transition-colors uppercase tracking-wide">[ AGENTS ]</a>
+                    <a href="#logs" class="text-sm font-mono text-ink-secondary hover:text-primary transition-colors uppercase tracking-wide">[ LOGS ]</a>
+                    <button class="bg-primary text-canvas font-bold px-5 py-2 text-sm hover:shadow-sentinel-glow transition-all duration-300 uppercase tracking-wide border border-transparent active:scale-95">
+                        Initiate Uplink
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-ink-secondary hover:text-primary">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-surface border-b border-border-faint">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#monitor" class="block px-3 py-2 text-base font-mono text-ink-secondary hover:text-primary hover:bg-white/5">[ MONITOR ]</a>
+                <a href="#agents" class="block px-3 py-2 text-base font-mono text-ink-secondary hover:text-primary hover:bg-white/5">[ AGENTS ]</a>
+                <a href="#logs" class="block px-3 py-2 text-base font-mono text-ink-secondary hover:text-primary hover:bg-white/5">[ LOGS ]</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20">
+
+        <!-- Hero Section -->
+        <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-primary/30 bg-primary-dim mb-6">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    </span>
+                    <span class="font-mono text-xs text-primary tracking-widest uppercase">System Online</span>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-ink-primary mb-6">
+                    THE WATCHTOWER FOR THE <br/>
+                    <span class="text-primary">AUTONOMOUS ECONOMY</span>
+                </h1>
+
+                <p class="text-ink-secondary text-lg max-w-lg mb-8 font-light leading-relaxed">
+                    A secure HUD for monitoring agentic transactions. Real-time surveillance, threat detection, and verification for the machine workforce.
+                </p>
+
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-primary text-canvas font-bold px-8 py-4 hover:shadow-sentinel-glow transition-all duration-300 uppercase tracking-widest border border-primary active:scale-95 clip-corners">
+                        [ DEPLOY SENTINEL ]
+                    </button>
+                    <button class="bg-transparent text-primary font-bold px-8 py-4 border border-primary hover:bg-primary-dim transition-all duration-300 uppercase tracking-widest">
+                        // READ PROTOCOLS
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hero Visual: Radar/Abstract UI -->
+            <div class="relative flex items-center justify-center lg:justify-end">
+                <div class="relative w-full max-w-md aspect-square border border-border-faint rounded-full flex items-center justify-center bg-surface/30">
+                    <!-- Radar Sweep -->
+                    <div class="absolute inset-0 rounded-full border border-primary/20 animate-[spin_4s_linear_infinite] origin-center" style="background: conic-gradient(from 0deg, transparent 0deg, rgba(0, 230, 118, 0.1) 60deg, transparent 61deg);"></div>
+                    <!-- Inner Circles -->
+                    <div class="absolute w-[70%] h-[70%] border border-border-faint rounded-full"></div>
+                    <div class="absolute w-[40%] h-[40%] border border-primary/30 rounded-full flex items-center justify-center">
+                        <img src="logo.svg" alt="Sentinel Logo" class="w-12 h-12 text-primary">
+                    </div>
+
+                    <!-- Decorative HUD elements around -->
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 bg-canvas px-2 font-mono text-xs text-primary">NORTH_SECTOR</div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 bg-canvas px-2 font-mono text-xs text-ink-secondary">SYS_ID: 994-A</div>
+                    <div class="absolute left-0 top-1/2 -translate-x-4 -translate-y-1/2 bg-canvas py-2 font-mono text-xs text-ink-secondary rotate-180" style="writing-mode: vertical-rl;">SCANNING...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats / Dashboard Bar -->
+        <section class="border-y border-border-faint bg-surface/50 backdrop-blur-md sticky top-16 z-30" id="monitor">
+            <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="border-l-2 border-primary pl-4">
+                    <div class="text-xs font-mono text-ink-secondary uppercase">Active Units</div>
+                    <div class="text-2xl font-mono text-ink-primary mt-1" id="stat-units">04</div>
+                </div>
+                <div class="border-l-2 border-border-faint pl-4">
+                    <div class="text-xs font-mono text-ink-secondary uppercase">Total Hashrate</div>
+                    <div class="text-2xl font-mono text-ink-primary mt-1">842 <span class="text-sm text-ink-secondary">TH/s</span></div>
+                </div>
+                <div class="border-l-2 border-hazard pl-4">
+                    <div class="text-xs font-mono text-ink-secondary uppercase text-hazard">Threat Level</div>
+                    <div class="text-2xl font-mono text-hazard mt-1 animate-pulse">ELEVATED</div>
+                </div>
+                <div class="border-l-2 border-border-faint pl-4">
+                    <div class="text-xs font-mono text-ink-secondary uppercase">Network</div>
+                    <div class="text-2xl font-mono text-primary mt-1">SECURE</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Monitor Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20" id="agents">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-ink-primary flex items-center gap-2">
+                        <i data-lucide="cpu" class="text-primary w-6 h-6"></i>
+                        ACTIVE AGENTS
+                    </h2>
+                    <p class="font-mono text-sm text-ink-secondary mt-2">// SECTOR SCAN: 4 UNITS DETECTED</p>
+                </div>
+                <button class="hidden md:block text-xs font-mono text-primary border border-primary/50 px-3 py-1 hover:bg-primary/10 transition-colors uppercase">
+                    Refresh Grid
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <!-- Agent Card 1: Active -->
+                <div class="sentinel-card group bg-surface border border-border-faint p-5 relative overflow-hidden hover:border-primary hover:shadow-sentinel-glow transition-all duration-300">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-primary/5 -mr-8 -mt-8 rounded-full blur-xl group-hover:bg-primary/20 transition-all"></div>
+
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="font-mono text-xs text-primary border border-primary/30 px-2 py-0.5 rounded-sm bg-primary/5">ALPHA</span>
+                        <div class="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,230,118,0.8)]"></div>
+                    </div>
+
+                    <h3 class="font-mono text-lg text-ink-primary mb-1">UNIT-8842</h3>
+                    <p class="text-xs text-ink-secondary mb-6">Arbitrage & Liquidity</p>
+
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">STATUS</span>
+                            <span class="text-primary">ONLINE</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">UPTIME</span>
+                            <span class="text-ink-primary js-uptime">14h 22m</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-ink-secondary">LOAD</span>
+                            <span class="text-ink-primary">42%</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-dashed border-border-faint">
+                        <div class="w-full bg-canvas h-1 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[42%]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Card 2: Active -->
+                <div class="sentinel-card group bg-surface border border-border-faint p-5 relative overflow-hidden hover:border-primary hover:shadow-sentinel-glow transition-all duration-300">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="font-mono text-xs text-primary border border-primary/30 px-2 py-0.5 rounded-sm bg-primary/5">BETA</span>
+                        <div class="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,230,118,0.8)]"></div>
+                    </div>
+
+                    <h3 class="font-mono text-lg text-ink-primary mb-1">UNIT-9921</h3>
+                    <p class="text-xs text-ink-secondary mb-6">Social Sentiment Analysis</p>
+
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">STATUS</span>
+                            <span class="text-primary">ONLINE</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">UPTIME</span>
+                            <span class="text-ink-primary js-uptime">02h 45m</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-ink-secondary">LOAD</span>
+                            <span class="text-ink-primary">89%</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-dashed border-border-faint">
+                        <div class="w-full bg-canvas h-1 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[89%]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Card 3: Hazard/Warning -->
+                <div class="sentinel-card group bg-surface border border-hazard/40 p-5 relative overflow-hidden hover:border-hazard hover:shadow-hazard-glow transition-all duration-300">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="font-mono text-xs text-hazard border border-hazard/30 px-2 py-0.5 rounded-sm bg-hazard/5">DELTA</span>
+                        <div class="h-2 w-2 rounded-full bg-hazard animate-pulse"></div>
+                    </div>
+
+                    <h3 class="font-mono text-lg text-ink-primary mb-1">UNIT-7710</h3>
+                    <p class="text-xs text-ink-secondary mb-6">Contract Auditor</p>
+
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">STATUS</span>
+                            <span class="text-hazard blink-text">FLAGGED</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">UPTIME</span>
+                            <span class="text-ink-primary js-uptime">--</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-ink-secondary">ERR</span>
+                            <span class="text-hazard">HIGH LATENCY</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-dashed border-border-faint">
+                        <button class="w-full py-1 text-xs font-mono text-hazard border border-hazard bg-hazard/10 hover:bg-hazard hover:text-white transition-colors uppercase">
+                            [ REBOOT SYSTEM ]
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Agent Card 4: Busy/Caution -->
+                <div class="sentinel-card group bg-surface border border-border-faint p-5 relative overflow-hidden hover:border-[#FFB74D] transition-all duration-300">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="font-mono text-xs text-[#FFB74D] border border-[#FFB74D]/30 px-2 py-0.5 rounded-sm bg-[#FFB74D]/5">GAMMA</span>
+                        <div class="h-2 w-2 rounded-full bg-[#FFB74D] animate-ping"></div>
+                    </div>
+
+                    <h3 class="font-mono text-lg text-ink-primary mb-1">UNIT-1029</h3>
+                    <p class="text-xs text-ink-secondary mb-6">Data Aggregation</p>
+
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">STATUS</span>
+                            <span class="text-[#FFB74D]">BUSY</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-ink-secondary">UPTIME</span>
+                            <span class="text-ink-primary js-uptime">119h 20m</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-ink-secondary">LOAD</span>
+                            <span class="text-ink-primary">99%</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-dashed border-border-faint">
+                         <div class="w-full bg-canvas h-1 rounded-full overflow-hidden">
+                            <div class="bg-[#FFB74D] h-full w-[99%]"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Live Terminal / Logs Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 grid grid-cols-1 lg:grid-cols-3 gap-8" id="logs">
+            <!-- Terminal Panel -->
+            <div class="lg:col-span-2 bg-canvas border border-border-faint p-1 rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-4 py-2 bg-surface border-b border-border-faint">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="terminal" class="w-4 h-4 text-primary"></i>
+                        <span class="font-mono text-xs text-ink-secondary uppercase">Transmission Log</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-border-faint"></div>
+                        <div class="w-3 h-3 rounded-full bg-border-faint"></div>
+                    </div>
+                </div>
+                <div class="p-4 h-[300px] overflow-y-auto font-mono text-xs leading-relaxed" id="terminal-content">
+                    <div class="text-ink-secondary mb-1"><span class="text-primary">[INIT]</span> Uplink established to Core...</div>
+                    <div class="text-ink-secondary mb-1"><span class="text-primary">[AUTH]</span> Handshake verified. ID: Sentinel-Alpha.</div>
+                    <div class="text-ink-secondary mb-1"><span class="text-ink-secondary">[SCAN]</span> Sector 4 clean. No rogue agents.</div>
+                    <!-- JS will populate more here -->
+                </div>
+            </div>
+
+            <!-- Side Panel Details -->
+            <div class="bg-surface border border-border-faint p-6 flex flex-col justify-between">
+                <div>
+                    <h4 class="font-bold text-ink-primary text-sm uppercase mb-4 tracking-widest">System Protocols</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-sm text-ink-secondary group cursor-pointer hover:text-primary transition-colors">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                            <span class="font-mono">ENCRYPTION: AES-256</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-ink-secondary group cursor-pointer hover:text-primary transition-colors">
+                            <i data-lucide="shield" class="w-4 h-4"></i>
+                            <span class="font-mono">FIREWALL: ACTIVE</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-ink-secondary group cursor-pointer hover:text-primary transition-colors">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            <span class="font-mono">LATENCY: 12ms</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-border-faint">
+                    <div class="text-xs text-ink-secondary uppercase font-mono mb-2">System Hash</div>
+                    <div class="font-mono text-xs text-primary truncate bg-canvas p-2 border border-border-faint rounded-sm">
+                        0x7a29...4b9c
+                    </div>
+                    <button class="mt-4 w-full border border-primary text-primary hover:bg-primary hover:text-black font-bold uppercase text-xs py-2 transition-all">
+                        View Full Ledger
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-border-faint bg-surface py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3 opacity-70">
+                <img src="logo.svg" alt="Sentinel Logo" class="w-6 h-6">
+                <span class="font-mono text-sm text-ink-secondary">SENTINEL SYSTEMS INC.</span>
+            </div>
+
+            <div class="flex gap-8 text-xs font-mono text-ink-secondary">
+                <a href="#" class="hover:text-primary transition-colors">DOCS</a>
+                <a href="#" class="hover:text-primary transition-colors">API</a>
+                <a href="#" class="hover:text-primary transition-colors">STATUS</a>
+                <a href="#" class="hover:text-primary transition-colors">PRIVACY</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                <span class="text-xs font-mono text-primary uppercase">All Systems Nominal</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts for Logic -->
+    <script>
+        // Init Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Live Log Simulator
+        const terminal = document.getElementById('terminal-content');
+        const logTypes = [
+            { type: '[INFO]', color: 'text-ink-secondary' },
+            { type: '[SCAN]', color: 'text-primary' },
+            { type: '[WARN]', color: 'text-[#FFB74D]' },
+            { type: '[TX]', color: 'text-ink-primary' }
+        ];
+
+        const logMessages = [
+            "New block decoded: #884921",
+            "Agent 8842 requesting liquidity pool access.",
+            "Sentiment analysis complete. Trend: Bullish.",
+            "Handshake verified with external node.",
+            "Packet loss detected in Sector 7. Retrying...",
+            "Transfer verified. Hash logged.",
+            "Updating global state tree...",
+            "Garbage collection initiated.",
+            "Optimizing execution path for Unit-9921."
+        ];
+
+        function addLog() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour12: false });
+            const randomType = logTypes[Math.floor(Math.random() * logTypes.length)];
+            const randomMsg = logMessages[Math.floor(Math.random() * logMessages.length)];
+
+            const div = document.createElement('div');
+            div.className = "mb-1 border-l-2 border-transparent hover:border-border-faint pl-2 transition-all";
+            div.innerHTML = `<span class="text-ink-secondary opacity-50">[${time}]</span> <span class="${randomType.color}">${randomType.type}</span> ${randomMsg}`;
+
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight; // Auto scroll to bottom
+
+            // Keep DOM light
+            if(terminal.children.length > 50) {
+                terminal.removeChild(terminal.children[0]);
+            }
+        }
+
+        // Add log every 1.5 - 3 seconds
+        setInterval(addLog, 2000);
+
+        // Simulated Uptime Counter Update
+        const uptimeElements = document.querySelectorAll('.js-uptime');
+
+        setInterval(() => {
+            uptimeElements.forEach(el => {
+                if(el.innerText === '--') return; // Skip error state
+                // Just a visual hack to make numbers change randomly for the demo
+                let text = el.innerText;
+                // In a real app, this would calculate actual diffs
+            });
+        }, 60000);
+
+        function addLogEntry(msg, colorClass) {
+            const div = document.createElement('div');
+            div.className = "mb-1";
+            div.innerHTML = `<span class="${colorClass}">[SYS]</span> ${msg}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Initial Populating
+        for(let i=0; i<3; i++) {
+            addLog();
+        }
+
+    </script>
+</body>
+</html>
