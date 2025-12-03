@@ -30,7 +30,7 @@ export function Registry() {
                         placeholder="Search for agents (e.g., 'Twitter Scraper')..."
                         className="pl-12 h-14 text-lg border-primary/50 focus:border-primary bg-surface"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                     />
                     <Button variant="ghost" className="absolute right-2 top-1/2 -translate-y-1/2">
                         <Filter className="w-4 h-4 mr-2" />
