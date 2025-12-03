@@ -35,13 +35,13 @@ Sentinel is composed of three interoperable Model Context Protocols (MCPs) that 
 
 ```mermaid
 graph TD
-    User([OPERATOR / USER]) -->|1. "Find price of X & buy"| Manager(MANAGER AGENT<br>// The Orchestrator)
+    User([OPERATOR / USER]) -->|1. "Find price of X and buy"| Manager(MANAGER AGENT<br>// The Orchestrator)
 
     subgraph SENTINEL PROTOCOL
         Manager -->|2. Query| Registry(REGISTRY MCP<br>// The Watchtower)
         Registry -->|3. Return: 'Data-Scraper-01'| Manager
         
-        Manager -->|4. Hire & Execute| Worker(SPECIALIST AGENT<br>// The Worker)
+        Manager -->|4. Hire and Execute| Worker(SPECIALIST AGENT<br>// The Worker)
         Worker -->|5. Result: 'Price is $10'| Manager
         
         Manager -->|6. Auto-Pay| Wallet(WALLET MCP<br>// The Vault)
@@ -198,5 +198,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 \<p\>\<b\>SENTINEL PROTOCOL © 2025\</b\>\</p\>
 \</div\>
 
-```
 ```
