@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Button } from '../ui/Button';
 import { Link } from 'react-router-dom';
 
-import { useWallet } from '../../context/WalletContext';
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const { connect, disconnect, isConnected, accountId, isConnecting } = useWallet();
 
     return (
         <nav className="fixed top-0 w-full z-40 border-b border-border-faint bg-canvas/90 backdrop-blur-sm">
@@ -26,16 +24,11 @@ export function Navbar() {
                         <Link to="/wallet" className="text-sm font-mono text-ink-secondary hover:text-primary transition-colors uppercase tracking-wide">[ VAULT ]</Link>
                         <Link to="/settings" className="text-sm font-mono text-ink-secondary hover:text-primary transition-colors uppercase tracking-wide">[ CONFIG ]</Link>
 
-                        {isConnected ? (
-                            <Button variant="secondary" size="sm" onClick={disconnect} className="border-primary text-primary bg-primary/10">
-                                <span className="mr-2 w-2 h-2 rounded-full bg-primary animate-pulse inline-block"></span>
-                                {accountId?.slice(0, 6)}...{accountId?.slice(-4)}
-                            </Button>
-                        ) : (
-                            <Button variant="primary" size="sm" onClick={connect} disabled={isConnecting}>
-                                {isConnecting ? "Connecting..." : "Connect HashPack"}
-                            </Button>
-                        )}
+                        <ConnectWallet
+                            theme="dark"
+                            btnTitle="Connect Wallet"
+                            className="!bg-primary !text-ink-primary !font-mono !text-sm !rounded-none !border !border-primary hover:!bg-primary/90"
+                        />
                     </div>
 
                     {/* Mobile menu button */}

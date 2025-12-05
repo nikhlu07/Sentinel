@@ -10,7 +10,6 @@ import { Wallet } from './pages/Wallet';
 import { AgentDetail } from './pages/AgentDetail';
 import { Settings } from './pages/Settings';
 
-import { WalletProvider } from './context/WalletContext';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 
 function App() {
@@ -26,39 +25,37 @@ function App() {
   }, []);
 
   return (
-    <WalletProvider>
-      <AnimatePresence mode="wait">
-        {isLoading ? (
-          <motion.div
-            key="loading"
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <LoadingScreen />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="app"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Router>
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Landing />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/registry" element={<Registry />} />
-                  <Route path="/wallet" element={<Wallet />} />
-                  <Route path="/agent/:id" element={<AgentDetail />} />
-                  <Route path="/settings" element={<Settings />} />
-                </Routes>
-              </Layout>
-            </Router>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </WalletProvider>
+    <AnimatePresence mode="wait">
+      {isLoading ? (
+        <motion.div
+          key="loading"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <LoadingScreen />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="app"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Router>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/registry" element={<Registry />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/agent/:id" element={<AgentDetail />} />
+                <Route path="/settings" element={<Settings />} />
+              </Routes>
+            </Layout>
+          </Router>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

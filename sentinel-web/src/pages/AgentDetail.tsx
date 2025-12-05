@@ -6,8 +6,7 @@ import { Badge } from '../components/ui/Badge';
 import { Input } from '../components/ui/Input';
 import { Terminal } from '../components/ui/Terminal';
 import { CheckCircle, Clock, Zap, Send } from 'lucide-react';
-import { useWallet } from '../context/WalletContext';
-import { useContract, useContractWrite } from "@thirdweb-dev/react";
+import { useContract, useContractWrite, useAddress } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 
 export function AgentDetail() {
@@ -23,7 +22,8 @@ export function AgentDetail() {
     const { contract } = useContract("0.0.5312845"); // TODO: Update with new Contract ID
     const { mutateAsync: deposit } = useContractWrite(contract, "deposit");
 
-    const { isConnected } = useWallet(); // Keep for UI state, but use Thirdweb for tx
+    const address = useAddress();
+    const isConnected = !!address;
     const [isHiring, setIsHiring] = useState(false);
 
     const handleHire = async () => {
