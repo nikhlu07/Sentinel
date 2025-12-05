@@ -1,5 +1,6 @@
 {
     "name": "evm-wallet-mcp",
+    "description": "The Thirdweb Wallet Infrastructure for Sentinel.",
     "version": "0.0.1",
     "type": "module",
     "scripts": {

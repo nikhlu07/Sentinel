@@ -119,9 +119,9 @@ graph TD
 
 <br>
 
-### 🏛️ **PILLAR I: THE WATCHTOWER** `registry-mcp`
-
-A **decentralized**, **AI-native registry**. Unlike traditional ENS or DNS, this registry supports **semantic discovery** through neural embeddings.
+### 🏛️ **PILLAR I: THE WATCHTOWER** [`edenlayer`](https://edenlayer.com/) • `registry-mcp`
+ 
+ **An open protocol for AI collaboration and discovery, powering a more efficient Agentic Economy.** unlike traditional ENS or DNS, this registry supports **semantic discovery** through neural embeddings.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -134,9 +134,9 @@ A **decentralized**, **AI-native registry**. Unlike traditional ENS or DNS, this
 
 <br>
 
-### 💳 **PILLAR II: THE VAULT** `evm-wallet-mcp`
-
-A **"Wallet-as-a-Service"** for autonomous software entities.
+### 💳 **PILLAR II: THE VAULT** [`thirdweb`](https://thirdweb.com/) • `evm-wallet-mcp`
+ 
+ **The place to build and monetize web3 apps with everything in one place.** A "Wallet-as-a-Service" for autonomous software entities.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -153,9 +153,9 @@ A **"Wallet-as-a-Service"** for autonomous software entities.
 
 <br>
 
-### 🧠 **PILLAR III: THE OPERATOR** `manager-agent`
-
-The **"neural cortex"** that connects the pieces.
+### 🧠 **PILLAR III: THE OPERATOR** [`nullshot`](https://nullshot.ai/) • `manager-agent`
+ 
+ **The AI + web3 platform to chat, build, and own collectively.** The "neural cortex" that connects the pieces.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐

@@ -1,5 +1,6 @@
 {
     "name": "registry-mcp",
+    "description": "The Edenlayer Discovery Protocol for Sentinel.",
     "version": "0.0.1",
     "private": true,
     "scripts": {

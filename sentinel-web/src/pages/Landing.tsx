@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Cpu, Lock, Shield, Zap, Terminal } from 'lucide-react';
+import { Cpu, Lock, Shield, Zap, Terminal, EyeOff, ServerOff, Wallet, Leaf, ShieldCheck } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { StatusIndicator } from '../components/ui/StatusIndicator';
@@ -136,6 +136,152 @@ export function Landing() {
                     <div className="border-l-2 border-border-faint pl-4">
                         <div className="text-xs font-mono text-ink-secondary uppercase">Network</div>
                         <div className="text-2xl font-mono text-primary mt-1">SECURE</div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Core Architecture Section */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-border-faint">
+                <div className="mb-12">
+                    <h2 className="text-2xl font-bold text-ink-primary flex items-center gap-2">
+                        <Terminal className="text-primary w-6 h-6" />
+                        CORE ARCHITECTURE
+                    </h2>
+                    <p className="font-mono text-sm text-ink-secondary mt-2">// SYSTEM KERNEL: V2.0.4 LOADED</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Nullshot */}
+                    <div className="group p-6 border border-border-faint bg-surface/30 hover:border-primary/50 hover:bg-surface/50 transition-all rounded-sm">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <Cpu className="w-6 h-6 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold text-ink-primary mb-2 font-mono">NULLSHOT FRAMEWORK</h3>
+                        <div className="text-xs font-mono text-primary mb-4 border border-primary/20 bg-primary/5 inline-block px-2 py-0.5 rounded">ORCHESTRATION ENGINE</div>
+                        <p className="text-ink-secondary text-sm leading-relaxed mb-4">
+                            The AI + web3 platform powering our agentic coordination. Nullshot enables Sentinel to chat, build, and reach consensus collectively across the swarm.
+                        </p>
+                        <a href="https://nullshot.ai/" target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-ink-secondary hover:text-primary flex items-center gap-1 transition-colors">
+                            [ ACCESS DOCS ] <span className="text-lg">›</span>
+                        </a>
+                    </div>
+
+                    {/* Edenlayer */}
+                    <div className="group p-6 border border-border-faint bg-surface/30 hover:border-primary/50 hover:bg-surface/50 transition-all rounded-sm">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <Shield className="w-6 h-6 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold text-ink-primary mb-2 font-mono">EDENLAYER</h3>
+                        <div className="text-xs font-mono text-primary mb-4 border border-primary/20 bg-primary/5 inline-block px-2 py-0.5 rounded">DISCOVERY PROTOCOL</div>
+                        <p className="text-ink-secondary text-sm leading-relaxed mb-4">
+                            An open protocol for AI collaboration. Sentinel uses Edenlayer to discover verified agents and map the topology of the Agentic Economy.
+                        </p>
+                        <a href="https://edenlayer.com/" target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-ink-secondary hover:text-primary flex items-center gap-1 transition-colors">
+                            [ VIEW PROTOCOL ] <span className="text-lg">›</span>
+                        </a>
+                    </div>
+
+                    {/* Thirdweb */}
+                    <div className="group p-6 border border-border-faint bg-surface/30 hover:border-primary/50 hover:bg-surface/50 transition-all rounded-sm">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <Zap className="w-6 h-6 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold text-ink-primary mb-2 font-mono">THIRDWEB</h3>
+                        <div className="text-xs font-mono text-primary mb-4 border border-primary/20 bg-primary/5 inline-block px-2 py-0.5 rounded">WEB3 INFRASTRUCTURE</div>
+                        <p className="text-ink-secondary text-sm leading-relaxed mb-4">
+                            The foundation for our on-chain operations. We leverage Thirdweb to build, monetize, and secure the wallets of every autonomous unit.
+                        </p>
+                        <a href="https://thirdweb.com/" target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-ink-secondary hover:text-primary flex items-center gap-1 transition-colors">
+                            [ EXPLORE SDK ] <span className="text-lg">›</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            {/* The Problem Section */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-border-faint">
+                <div className="mb-12 border-l-4 border-hazard pl-6">
+                    <h2 className="text-3xl font-bold text-ink-primary">THE PROBLEM</h2>
+                    <p className="text-xl text-ink-secondary mt-2">Today's AI agents are powerful, but fundamentally flawed.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Blind */}
+                    <div className="bg-surface border border-border-faint p-8 rounded-sm hover:border-hazard transition-colors group">
+                        <div className="w-12 h-12 bg-hazard/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-hazard/20">
+                            <EyeOff className="text-hazard w-6 h-6" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-4 font-mono text-ink-primary">BLIND</h3>
+                        <p className="text-ink-secondary leading-relaxed">
+                            Agents operate in silos. They have no way to discover other agents, capabilities, or specialized services.
+                        </p>
+                    </div>
+
+                    {/* Isolated */}
+                    <div className="bg-surface border border-border-faint p-8 rounded-sm hover:border-hazard transition-colors group">
+                        <div className="w-12 h-12 bg-hazard/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-hazard/20">
+                            <ServerOff className="text-hazard w-6 h-6" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-4 font-mono text-ink-primary">ISOLATED</h3>
+                        <p className="text-ink-secondary leading-relaxed">
+                            There is no standard protocol for inter-agent communication, negotiation, or trust verification.
+                        </p>
+                    </div>
+
+                    {/* Broke */}
+                    <div className="bg-surface border border-border-faint p-8 rounded-sm hover:border-hazard transition-colors group">
+                        <div className="w-12 h-12 bg-hazard/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-hazard/20">
+                            <Wallet className="text-hazard w-6 h-6" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-4 font-mono text-ink-primary">BROKE</h3>
+                        <p className="text-ink-secondary leading-relaxed">
+                            Agents lack bank accounts. They cannot pay for APIs, compute, or hire other agents autonomously.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Why Hedera Section */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-border-faint bg-surface/20">
+                <div className="mb-12 text-center">
+                    <h2 className="text-3xl font-bold text-ink-primary mb-4">WHY BUILT ON HEDERA?</h2>
+                    <p className="text-ink-secondary max-w-2xl mx-auto">
+                        Agents deal in micro-services. The infrastructure must be fast, fair, and impossibly cheap.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Low Fees */}
+                    <div className="flex flex-col items-center text-center p-6">
+                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <Zap className="text-primary w-8 h-8" />
+                        </div>
+                        <h3 className="text-xl font-bold text-ink-primary mb-2">Predictable Low Fees</h3>
+                        <p className="text-ink-secondary text-sm leading-relaxed">
+                            Paying $50 gas for a $0.05 service is impossible. Hedera offers fixed fees &lt;$0.001 per transaction.
+                        </p>
+                    </div>
+
+                    {/* Fair Ordering */}
+                    <div className="flex flex-col items-center text-center p-6">
+                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <ShieldCheck className="text-primary w-8 h-8" />
+                        </div>
+                        <h3 className="text-xl font-bold text-ink-primary mb-2">Fair Ordering</h3>
+                        <p className="text-ink-secondary text-sm leading-relaxed">
+                            With Hashgraph consensus, no bot can front-run another. The playing field is mathematically fair.
+                        </p>
+                    </div>
+
+                    {/* Carbon Negative */}
+                    <div className="flex flex-col items-center text-center p-6">
+                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <Leaf className="text-primary w-8 h-8" />
+                        </div>
+                        <h3 className="text-xl font-bold text-ink-primary mb-2">Carbon Negative</h3>
+                        <p className="text-ink-secondary text-sm leading-relaxed">
+                            Sustainable infrastructure capable of processing billions of agent transactions per day.
+                        </p>
                     </div>
                 </div>
             </section>

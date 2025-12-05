@@ -154,7 +154,7 @@
             <span class="font-mono text-xs text-primary tracking-widest">SENTINEL_PROTOCOL</span>
         </div>
         <div class="flex gap-2 font-mono text-xs text-ink-secondary">
-            <span id="slide-indicator">01 / 08</span>
+            <span id="slide-indicator">01 / 09</span>
         </div>
     </div>
 
@@ -294,7 +294,8 @@
                         </h3>
                         <p class="text-ink-secondary">Infrastructure by <strong>Thirdweb</strong> &
                             <strong>Hedera</strong>. Enables autonomous agents to hold assets and stream payments with
-                            zero-knowledge security.</p>
+                            zero-knowledge security.
+                        </p>
                     </div>
                 </div>
 
@@ -427,8 +428,75 @@
         </div>
     </div>
 
-    <!-- SLIDE 6: WHY HEDERA -->
+    <!-- SLIDE 5: NULLSHOT FRAMEWORK (NEW) -->
     <div class="slide" id="slide-5">
+        <div class="max-w-6xl w-full">
+            <div class="mb-12 border-l-4 border-hazard pl-6">
+                <h2 class="text-4xl font-bold mb-2 text-ink-primary">NULLSHOT FRAMEWORK</h2>
+                <p class="text-xl text-ink-secondary">The neural orchestration engine powering Sentinel.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Orchestration -->
+                <div
+                    class="bg-surface border border-border-faint p-8 rounded-sm hover:border-hazard transition-colors group">
+                    <div
+                        class="w-12 h-12 bg-hazard/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-hazard/20">
+                        <i data-lucide="brain-circuit" class="text-hazard w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 font-mono">ORCHESTRATION</h3>
+                    <p class="text-ink-secondary leading-relaxed">
+                        Sophisticated goal decomposition and multi-agent coordination. Nullshot breaks down complex
+                        objectives into atomic, executable tasks.
+                    </p>
+                </div>
+
+                <!-- Type-Safe -->
+                <div
+                    class="bg-surface border border-border-faint p-8 rounded-sm hover:border-hazard transition-colors group">
+                    <div
+                        class="w-12 h-12 bg-hazard/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-hazard/20">
+                        <i data-lucide="file-code" class="text-hazard w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 font-mono">TYPE-SAFE</h3>
+                    <p class="text-ink-secondary leading-relaxed">
+                        Built entirely on <strong>TypeScript</strong>. Ensures reliability and robustness in agentic
+                        workflows, minimizing runtime errors in critical economic operations.
+                    </p>
+                </div>
+
+                <!-- MCP Native -->
+                <div
+                    class="bg-surface border border-border-faint p-8 rounded-sm hover:border-hazard transition-colors group">
+                    <div
+                        class="w-12 h-12 bg-hazard/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-hazard/20">
+                        <i data-lucide="puzzle" class="text-hazard w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 font-mono">MCP NATIVE</h3>
+                    <p class="text-ink-secondary leading-relaxed">
+                        First-class support for the <strong>Model Context Protocol</strong>. Seamlessly integrates with
+                        external tools, data sources, and other agents.
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="mt-12 p-6 border border-border-faint bg-surface/30 rounded flex items-center justify-center gap-8">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-primary mb-1">v2.0</div>
+                    <div class="text-xs text-ink-secondary font-mono">CORE VERSION</div>
+                </div>
+                <div class="h-10 w-px bg-border-faint"></div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-white mb-1">100%</div>
+                    <div class="text-xs text-ink-secondary font-mono">OPEN SOURCE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: WHY HEDERA -->
+    <div class="slide" id="slide-6">
         <div class="max-w-5xl w-full">
             <h2 class="text-4xl font-bold mb-12 text-center text-ink-primary">WHY BUILT ON HEDERA?</h2>
 
@@ -497,7 +565,7 @@
     </div>
 
     <!-- SLIDE 7: ROADMAP -->
-    <div class="slide" id="slide-6">
+    <div class="slide" id="slide-7">
         <div class="max-w-5xl w-full">
             <h2 class="text-4xl font-bold mb-16 text-center text-ink-primary">PROTOCOL EVOLUTION</h2>
 
@@ -555,7 +623,7 @@
     </div>
 
     <!-- SLIDE 8: END -->
-    <div class="slide" id="slide-7">
+    <div class="slide" id="slide-8">
         <div class="text-center z-10 w-full max-w-4xl">
             <h2 class="text-5xl md:text-7xl font-bold mb-8">DEPLOY THE FUTURE</h2>
             <p class="text-xl text-ink-secondary mb-12 max-w-2xl mx-auto">
@@ -585,7 +653,7 @@
         lucide.createIcons();
 
         let currentSlide = 0;
-        const totalSlides = 8;
+        const totalSlides = 9;
 
         function updateSlide() {
             // Update Classes

@@ -1,5 +1,6 @@
 {
     "name": "manager-agent",
+    "description": "The Nullshot Orchestration Agent for Sentinel.",
     "version": "0.0.1",
     "type": "module",
     "scripts": {
