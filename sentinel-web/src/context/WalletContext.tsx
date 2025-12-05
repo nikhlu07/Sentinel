@@ -1,5 +1,5 @@
-import { createContext, useContext, type ReactNode } from 'react';
-import { useAddress, useMetamask, useDisconnect, useConnectionStatus } from "@thirdweb-dev/react";
+import { createContext, useContext, type ReactNode, useState, useEffect } from 'react';
+import { HashConnect, HashConnectTypes, MessageTypes } from 'hashconnect';
 
 interface WalletContextType {
     connect: () => Promise<void>;
@@ -7,35 +7,85 @@ interface WalletContextType {
     accountId: string | undefined;
     isConnected: boolean;
     isConnecting: boolean;
+    pairingString: string;
+    sendTransaction: (trans: any) => Promise<any>;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
+const hashConnect = new HashConnect();
+
+const appMetadata: HashConnectTypes.AppMetadata = {
+    name: "Sentinel Protocol",
+    description: "The Trust Layer for the Open Agentic Web",
+    icon: "https://sentinel-protocol.pages.dev/logo.svg"
+};
+
 export const WalletProvider = ({ children }: { children: ReactNode }) => {
-    const connectWithMetamask = useMetamask();
-    const disconnectWallet = useDisconnect();
-    const address = useAddress();
-    const connectionStatus = useConnectionStatus();
+    const [pairingData, setPairingData] = useState<HashConnectTypes.SavedPairingData | null>(null);
+    const [pairingString, setPairingString] = useState<string>("");
+    const [isConnecting, setIsConnecting] = useState(false);
+
+    useEffect(() => {
+        const initHashConnect = async () => {
+            // Initialize and Debug
+            const initData = await hashConnect.init(appMetadata, "testnet", false);
+            setPairingString(initData.pairingString);
+
+            // Check for existing connection
+            if (initData.savedPairings.length > 0) {
+                setPairingData(initData.savedPairings[0]);
+            }
+        };
+
+        initHashConnect();
+
+        // Event Listeners
+        hashConnect.foundExtensionEvent.on((data) => {
+            console.log("Found extension", data);
+        });
+
+        hashConnect.pairingEvent.on((data) => {
+            console.log("Paired with wallet", data);
+            setPairingData(data.pairingData!);
+            setIsConnecting(false);
+        });
+    }, []);
 
     const connect = async () => {
-        try {
-            await connectWithMetamask();
-        } catch (error) {
-            console.error("Failed to connect wallet:", error);
-        }
+        setIsConnecting(true);
+        hashConnect.connectToLocalWallet();
     };
 
     const disconnect = () => {
-        disconnectWallet();
+        hashConnect.disconnect(pairingData?.topic!);
+        setPairingData(null);
+    };
+
+    const sendTransaction = async (trans: any) => {
+        if (!pairingData) return;
+
+        const transaction: HashConnectTypes.Transaction = {
+            topic: pairingData.topic,
+            byteArray: trans.toBytes(),
+            metadata: {
+                accountToSign: pairingData.accountIds[0],
+                returnTransaction: false
+            }
+        };
+
+        return await hashConnect.sendTransaction(pairingData.topic, transaction);
     };
 
     return (
         <WalletContext.Provider value={{
             connect,
             disconnect,
-            accountId: address,
-            isConnected: !!address,
-            isConnecting: connectionStatus === "connecting"
+            sendTransaction,
+            accountId: pairingData?.accountIds[0],
+            isConnected: !!pairingData,
+            isConnecting,
+            pairingString
         }}>
             {children}
         </WalletContext.Provider>

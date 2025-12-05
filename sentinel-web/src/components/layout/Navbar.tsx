@@ -7,7 +7,7 @@ import { useWallet } from '../../context/WalletContext';
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const { connect, disconnect, isConnected, accountId } = useWallet();
+    const { connect, disconnect, isConnected, accountId, isConnecting } = useWallet();
 
     return (
         <nav className="fixed top-0 w-full z-40 border-b border-border-faint bg-canvas/90 backdrop-blur-sm">
@@ -29,11 +29,11 @@ export function Navbar() {
                         {isConnected ? (
                             <Button variant="secondary" size="sm" onClick={disconnect} className="border-primary text-primary bg-primary/10">
                                 <span className="mr-2 w-2 h-2 rounded-full bg-primary animate-pulse inline-block"></span>
-                                {accountId}
+                                {accountId?.slice(0, 6)}...{accountId?.slice(-4)}
                             </Button>
                         ) : (
-                            <Button variant="primary" size="sm" onClick={connect}>
-                                Initiate Uplink
+                            <Button variant="primary" size="sm" onClick={connect} disabled={isConnecting}>
+                                {isConnecting ? "Connecting..." : "Connect HashPack"}
                             </Button>
                         )}
                     </div>

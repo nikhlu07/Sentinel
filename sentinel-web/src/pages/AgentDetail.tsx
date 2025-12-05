@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -5,6 +6,9 @@ import { Badge } from '../components/ui/Badge';
 import { Input } from '../components/ui/Input';
 import { Terminal } from '../components/ui/Terminal';
 import { CheckCircle, Clock, Zap, Send } from 'lucide-react';
+import { useWallet } from '../context/WalletContext';
+import { useContract, useContractWrite } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
 
 export function AgentDetail() {
     const { id } = useParams();
@@ -15,6 +19,40 @@ export function AgentDetail() {
         { time: '10:42:08', type: '[WARN]', color: 'text-[#D97706]', msg: 'Rate limit approaching' },
         { time: '10:42:12', type: '[SUCCESS]', color: 'text-primary', msg: 'Job completed. Data stored.' },
     ];
+
+    const { contract } = useContract("0.0.5312845"); // TODO: Update with new Contract ID
+    const { mutateAsync: deposit, isLoading } = useContractWrite(contract, "deposit");
+
+    const { isConnected } = useWallet(); // Keep for UI state, but use Thirdweb for tx
+    const [isHiring, setIsHiring] = useState(false);
+
+    const handleHire = async () => {
+        if (!isConnected) {
+            alert("Please connect your wallet first!");
+            return;
+        }
+
+        setIsHiring(true);
+        try {
+            // Call the deposit function on the smart contract
+            // We pass the agent's address (using a placeholder for now)
+            // and send 10 HBAR as value
+            const data = await deposit({
+                args: ["0.0.3"], // Agent Address
+                overrides: {
+                    value: ethers.utils.parseEther("10"), // 10 HBAR
+                },
+            });
+
+            console.info("Contract call successs", data);
+            alert("Hiring request sent via Smart Contract!");
+        } catch (error) {
+            console.error("Hiring failed:", error);
+            alert("Hiring failed. See console.");
+        } finally {
+            setIsHiring(false);
+        }
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -30,9 +68,11 @@ export function AgentDetail() {
                 <div className="flex gap-4">
                     <div className="text-right mr-4">
                         <p className="text-xs text-ink-secondary uppercase font-mono">Rate</p>
-                        <p className="text-xl font-bold text-primary font-mono">0.05 USDC/run</p>
+                        <p className="text-xl font-bold text-primary font-mono">10 HBAR/run</p>
                     </div>
-                    <Button variant="primary" size="lg">HIRE AGENT</Button>
+                    <Button variant="primary" size="lg" onClick={handleHire} disabled={isHiring}>
+                        {isHiring ? "PROCESSING..." : "HIRE AGENT"}
+                    </Button>
                 </div>
             </div>
 
